@@ -9,14 +9,52 @@
 #include <fmt/std.h>
 
 std::string getPath();
+void addPassword(const std::string& path);
 
 int main() {
     auto path = getPath();
 
-    fmt::print("Choose one of the options below:\n"
-               "");
+    while(true){
+        fmt::print("\nChoose one of the options below:\n"
+                   "1 -> Find password\n"
+                   "2 -> Sort password\n"
+                   "3 -> Add password\n"
+                   "4 -> Edit password\n"
+                   "5 -> Remove password\n"
+                   "6 -> Add category\n"
+                   "7 -> Remove category\n");
+        int option;
+        std::cin >> option;
 
-    return 0;
+        while(option < 1 || option > 7){
+            fmt::print("Invalid option! Try again:\n");
+            std::cin >> option;
+        }
+
+        switch(option){
+            case 1:
+                fmt::print("not yet implemented lol");
+                break;
+            case 2:
+                fmt::print("not yet implemented lol");
+                break;
+            case 3:
+                addPassword(path);
+                break;
+            case 4:
+                fmt::print("not yet implemented lol");
+                break;
+            case 5:
+                fmt::print("not yet implemented lol");
+                break;
+            case 6:
+                fmt::print("not yet implemented lol");
+                break;
+            case 7:
+                fmt::print("not yet implemented lol");
+                break;
+        }
+    }
 }
 
 std::string getPath(){
@@ -30,12 +68,13 @@ std::string getPath(){
     }
 
     if(option == 1){
-        fmt::print("Choose file from this directory (type g.e. 1)\n***\n");
+        fmt::print("\nChoose file from this directory (type g.e. 1)\n***\n");
         auto dirIter = std::filesystem::directory_iterator("..");
         int fileIter = 1;
         std::vector<std::string> paths;
         for (auto const &entry: dirIter){
-            if(entry.is_regular_file() && entry.path() != "..\\CMakeLists.txt" && entry.path() != "..\\main.cpp") {
+            if(entry.is_regular_file() && entry.path() != "..\\CMakeLists.txt"
+            && entry.path() != "..\\main.cpp" && entry.path() != "..\\.gitignore") {
                 fmt::print("Option no. {}: {}\n", fileIter++, entry.path());
                 paths.push_back(entry.path().string());
             }
@@ -56,4 +95,31 @@ std::string getPath(){
         std::cin >> path;
         return path;
     }
+}
+
+void addPassword(const std::string& path){
+    auto vault = std::fstream(path, std::ios::in);
+    std::string line, word;
+    std::getline(vault, line);
+
+    vault = std::fstream(path, std::ios::out | std::ios::app);
+    std::string input;
+    fmt::print("\nName of password (e.g. password to twitter account):\n");
+    std::cin >> input;
+    vault << input + " ";
+
+    fmt::print("\nDo you want to have password generated? (yes/no):\n");
+    std::cin >> input;
+    while(input != "yes" && input != "no"){
+        fmt::print("\nInvalid input! Try again:\n");
+        std::cin >> input;
+    }
+    if(input == "yes"){
+        fmt::print("not yet implemented");
+    }else{
+        fmt::print("\nPassword:\n");
+        std::cin >> input;
+        vault << input + " ";
+    }
+
 }
