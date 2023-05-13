@@ -57,6 +57,13 @@ int main() {
     }
 }
 
+/**
+ * @brief Returns path to the file
+ *
+ * This function returns the path to the file either in this folder or an absolute path to the file.
+ *
+ * @param option Stores the option entered by the user.
+ */
 std::string getPath(){
     fmt::print("To choose from existing file in this directory type 1, to enter an absolute path type 2:\n");
     int option;
