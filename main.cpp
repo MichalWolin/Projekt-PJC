@@ -12,7 +12,9 @@ std::string getPath();
 
 int main() {
     auto path = getPath();
-    std::cout << path;
+
+    fmt::print("Choose one of the options below:\n"
+               "");
 
     return 0;
 }
@@ -28,7 +30,7 @@ std::string getPath(){
     }
 
     if(option == 1){
-        fmt::print("Choose file from this directory (type g.e. 1)\n\n");
+        fmt::print("Choose file from this directory (type g.e. 1)\n***\n");
         auto dirIter = std::filesystem::directory_iterator("..");
         int fileIter = 1;
         std::vector<std::string> paths;
@@ -38,6 +40,7 @@ std::string getPath(){
                 paths.push_back(entry.path().string());
             }
         }
+        fmt::print("***\n");
 
         int fileNo;
         std::cin >> fileNo;
@@ -47,6 +50,10 @@ std::string getPath(){
         }
 
         return paths.at(fileNo - 1);
+    }else{
+        fmt::print("Enter an absolute path to vault:\n");
+        std::string path;
+        std::cin >> path;
+        return path;
     }
-    return "";
 }
