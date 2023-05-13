@@ -1,0 +1,14 @@
+# Target labels
+ fmt-populate
+# Source files and their labels
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/CMakeFiles/fmt-populate
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/CMakeFiles/fmt-populate.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/CMakeFiles/fmt-populate-complete.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-build.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-configure.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-download.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-install.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-mkdir.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-patch.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-test.rule
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-update.rule

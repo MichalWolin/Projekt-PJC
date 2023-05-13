@@ -1,0 +1,6 @@
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/CMakeFiles/Projekt.dir
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-build/CMakeFiles/fmt.dir
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-build/CMakeFiles/edit_cache.dir
+D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,21 @@
+# ninja log v5
+0	32	7056779746475360	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-mkdir	db6d654596cde962
+0	32	7056779746475360	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-mkdir	db6d654596cde962
+33	3646	7056779782618884	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-download	10ef9ba89f022c20
+33	3646	7056779782618884	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-download	10ef9ba89f022c20
+3646	3732	0	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-update	1e5e631fc39d25b8
+3646	3732	0	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-update	1e5e631fc39d25b8
+3747	3777	7056779783926918	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-patch	c072eb82acd30e1f
+3747	3777	7056779783926918	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-patch	c072eb82acd30e1f
+3777	3807	7056779784218278	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-configure	ae49552160cbd6a4
+3777	3807	7056779784218278	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-configure	ae49552160cbd6a4
+3807	3836	7056779784519660	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-build	e511f69c31b5711e
+3807	3836	7056779784519660	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-build	e511f69c31b5711e
+3836	3866	7056779784821014	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-install	a76af222f2c1de03
+3836	3866	7056779784821014	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-install	a76af222f2c1de03
+3866	3896	7056779785112233	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-test	fd9f32cf6387d4e3
+3866	3896	7056779785112233	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-test	fd9f32cf6387d4e3
+3896	3935	7056779785504205	CMakeFiles/fmt-populate-complete	7b3e05bed0739a37
+3896	3935	7056779785504205	fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-done	7b3e05bed0739a37
+3896	3935	7056779785504205	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/CMakeFiles/fmt-populate-complete	7b3e05bed0739a37
+3896	3935	7056779785504205	D:/Studia/2 semestr/PJC/Projekt/cmake-build-debug/_deps/fmt-subbuild/fmt-populate-prefix/src/fmt-populate-stamp/fmt-populate-done	7b3e05bed0739a37
