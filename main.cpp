@@ -1,45 +1,71 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <fstream>
-#include <sstream>
 #include <filesystem>
 #include <fmt/std.h>
+#include <map>
+
+#include "addCategory.h"
+#include "addPassword.h"
+#include "editPassword.h"
+#include "findPassword.h"
+#include "removeCategory.h"
+#include "removePassword.h"
+#include "sortPasswords.h"
+
+struct Password{
+    std::string name;
+    std::string password;
+    std::string webpage;
+    std::string login;
+    std::map<int, std::string> categories;
+
+    Password(const std::string &name, const std::string &password, const std::string &webpage,
+             const std::string &login, const std::map<int, std::string> &categories) :
+             name(name), password(password), webpage(webpage),
+             login(login), categories(categories) {}
+};
 
 std::string getPath();
-void addPassword(const std::string& path);
+long masterKey();
 
 int main() {
+    auto key = masterKey();
     auto path = getPath();
+//    auto passwords = getPasswords(path);
+    bool isRunning = true;
 
-    while(true){
-        fmt::print("\nChoose one of the options below:\n"
+    while(isRunning){
+        fmt::println("Choose one of the options below:\n"
                    "1 -> Find password\n"
                    "2 -> Sort password\n"
                    "3 -> Add password\n"
                    "4 -> Edit password\n"
                    "5 -> Remove password\n"
                    "6 -> Add category\n"
-                   "7 -> Remove category\n");
+                   "7 -> Remove category\n"
+                   "0 -> Exit");
         int option;
         std::cin >> option;
 
-        while(option < 1 || option > 7){
-            fmt::print("Invalid option! Try again:\n");
+        while(option < 0 || option > 7){
+            fmt::println("Invalid option! Try again:");
             std::cin >> option;
         }
 
         switch(option){
+            case 0:
+                isRunning = false;
+                break;
             case 1:
                 fmt::print("not yet implemented lol");
                 break;
             case 2:
-                fmt::print("not yet implemented lol");
+                sortPasswords(path);
                 break;
             case 3:
-                addPassword(path);
+                addPassword(path, key);
                 break;
             case 4:
                 fmt::print("not yet implemented lol");
@@ -57,32 +83,36 @@ int main() {
     }
 }
 
+
+
 /**
  * @brief Returns path to the file
  *
  * This function returns the path to the file either in this folder or an absolute path to the file.
+ * The user can choose from existing files in this directory or enter an absolute path.
+ * If the user chooses to enter an absolute path, the function checks if the file exists.
+ * If the file doesn't exist, the user is asked to enter the path again.
  *
  * @param option Stores the option entered by the user.
  */
 std::string getPath(){
-    fmt::print("To choose from existing file in this directory type 1, to enter an absolute path type 2:\n");
+    fmt::println("To choose from existing file in this directory type 1, to enter an absolute path type 2:");
     int option;
     std::cin >> option;
 
     while(option < 1 || option > 2){
-        fmt::print("Incorrect option! Type 1 for existing file or type 2 to enter an absolute path:\n");
+        fmt::println("Incorrect option! Type 1 for existing file or type 2 to enter an absolute path:");
         std::cin >> option;
     }
 
     if(option == 1){
-        fmt::print("\nChoose file from this directory (type g.e. 1)\n***\n");
+        fmt::println("Choose file from this directory (type g.e. 1)\n***");
         auto dirIter = std::filesystem::directory_iterator("..");
         int fileIter = 1;
         std::vector<std::string> paths;
         for (auto const &entry: dirIter){
-            if(entry.is_regular_file() && entry.path() != "..\\CMakeLists.txt"
-            && entry.path() != "..\\main.cpp" && entry.path() != "..\\.gitignore") {
-                fmt::print("Option no. {}: {}\n", fileIter++, entry.path());
+            if(entry.is_regular_file() && entry.path().extension() == ".vault") {
+                fmt::println("Option no. {}: {}", fileIter++, entry.path());
                 paths.push_back(entry.path().string());
             }
         }
@@ -104,29 +134,27 @@ std::string getPath(){
     }
 }
 
-void addPassword(const std::string& path){
-    auto vault = std::fstream(path, std::ios::in);
-    std::string line, word;
-    std::getline(vault, line);
-
-    vault = std::fstream(path, std::ios::out | std::ios::app);
-    std::string input;
-    fmt::print("\nName of password (e.g. password to twitter account):\n");
-    std::cin >> input;
-    vault << input + " ";
-
-    fmt::print("\nDo you want to have password generated? (yes/no):\n");
-    std::cin >> input;
-    while(input != "yes" && input != "no"){
-        fmt::print("\nInvalid input! Try again:\n");
-        std::cin >> input;
+/**
+ * @brief Returns master key
+ *
+ * This function returns the master key which is used to encrypt and decrypt passwords.
+ * It is generated by multiplying the ASCII values of the characters of the master password.
+ *
+ * @param masterPassword Stores the master password entered by the user.
+ * @param key Stores the master key.
+ */
+long masterKey(){
+    std::string masterPassword;
+    fmt::println("Enter your master password:");
+    std::cin >> masterPassword;
+    long key = 1;
+    for (int i = 0; i < masterPassword.size(); ++i) {
+        key *= masterPassword.at(0);
     }
-    if(input == "yes"){
-        fmt::print("not yet implemented");
-    }else{
-        fmt::print("\nPassword:\n");
-        std::cin >> input;
-        vault << input + " ";
-    }
-
+    return key;
 }
+
+
+
+
+
