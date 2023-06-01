@@ -2,22 +2,17 @@
 #include <fstream>
 #include <iostream>
 #include <ctime>
+#include <vector>
 
 #include "addPassword.h"
+#include "Password.h"
 
 std::string generatePassword();
-std::string encryptPassword(const std::string& password, const long& key);
 
-void addPassword(const std::string& path, const long& key){
-    auto vault = std::fstream(path, std::ios::in);
-    std::string line, word;
-    std::getline(vault, line);
-
-    vault = std::fstream(path, std::ios::out | std::ios::app);
-    std::string input;
+void addPassword(std::vector<Password>& passwords, const std::vector<std::string>& categories){
+    std::string name, password, webpage, login, input;
     fmt::println("Name of password (e.g. password to twitter account):");
-    std::cin >> input;
-    vault << input + ":";
+    std::cin >> name;
 
     fmt::println("Do you want to have password generated? (yes/no):");
     std::cin >> input;
@@ -26,11 +21,10 @@ void addPassword(const std::string& path, const long& key){
         std::cin >> input;
     }
     if(input == "yes"){
-        vault << encryptPassword(generatePassword(), key) + ":";
+        password = generatePassword();
     }else{
-        fmt::println("Password:");
-        std::cin >> input;
-        vault << encryptPassword(input, key) + ":";
+        fmt::println("Enter password:");
+        std::cin >> password;
     }
 
     fmt::println("Do you want to add a link to the website? (yes/no)");
@@ -41,10 +35,9 @@ void addPassword(const std::string& path, const long& key){
     }
     if(input == "yes"){
         fmt::println("Enter a link to the website (g.e. www.pja.edu.pl):");
-        std::cin >> input;
-        vault << input + ":";
+        std::cin >> webpage;
     }else{
-        vault << "-:";
+        webpage = "-";
     }
 
     fmt::println("Do you want to add login? (yes/no)");
@@ -55,11 +48,20 @@ void addPassword(const std::string& path, const long& key){
     }
     if(input == "yes"){
         fmt::println("Enter login (g.e. ThrowAwayAccount100):");
-        std::cin >> input;
-        vault << input;
+        std::cin >> login;
     }else{
-        vault << "-";
+        login = "-";
     }
+
+    std::map<std::string, std::string> categoriesMap;
+    for(const std::string& category : categories){
+        fmt::println("Set category {}:", category);
+        std::cin >> input;
+        categoriesMap.insert(std::pair<std::string, std::string>(category, input));
+    }
+
+    Password newPassword(name, password, webpage, login, categoriesMap);
+    passwords.push_back(newPassword);
 }
 
 std::string generatePassword(){
@@ -123,10 +125,3 @@ std::string generatePassword(){
     return generatedPassword;
 }
 
-std::string encryptPassword(const std::string& password, const long& key){
-    std::string encryptedPassword = "";
-    for (int i = 0; i < password.length(); ++i) {
-        encryptedPassword += (char)(password.at(i) ^ key);
-    }
-    return encryptedPassword;
-}

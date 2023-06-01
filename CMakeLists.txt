@@ -13,5 +13,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(fmt)
 
-add_executable(Projekt main.cpp findPassword.cpp sortPasswords.cpp addPassword.cpp editPassword.cpp removePassword.cpp addCategory.cpp removeCategory.cpp addCategory.h addPassword.h editPassword.h findPassword.h removeCategory.h removePassword.h sortPasswords.h)
+add_executable(Projekt main.cpp findPassword.cpp sortPasswords.cpp addPassword.cpp editPassword.cpp removePassword.cpp addCategory.cpp removeCategory.cpp addCategory.h addPassword.h editPassword.h findPassword.h removeCategory.h removePassword.h sortPasswords.h Password.cpp Password.h)
 target_link_libraries(Projekt fmt)

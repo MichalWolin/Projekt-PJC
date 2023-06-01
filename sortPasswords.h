@@ -1,3 +1,5 @@
 #pragma once
 
-void sortPasswords(const std::string& path);
+#include "Password.h"
+
+void sortPasswords(const std::vector<Password>& passwords);

@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <fmt/ranges.h>
+#include <fmt/core.h>
 #include <filesystem>
 #include <fmt/std.h>
 #include <map>
+#include <fstream>
 
 #include "addCategory.h"
 #include "addPassword.h"
@@ -13,27 +14,26 @@
 #include "removeCategory.h"
 #include "removePassword.h"
 #include "sortPasswords.h"
+#include "Password.h"
 
-struct Password{
-    std::string name;
-    std::string password;
-    std::string webpage;
-    std::string login;
-    std::map<int, std::string> categories;
-
-    Password(const std::string &name, const std::string &password, const std::string &webpage,
-             const std::string &login, const std::map<int, std::string> &categories) :
-             name(name), password(password), webpage(webpage),
-             login(login), categories(categories) {}
-};
 
 std::string getPath();
 long masterKey();
+std::vector<std::string> getCategories(const std::string& path);
+std::vector<Password> getPasswords(const std::string& path, const long& key);
+void writeFile(const std::string& path, const std::vector<std::string>& categories,
+               const std::vector<Password>& passwords, const long& key);
+std::string encryptPassword(const std::string& password, const long& key);
 
 int main() {
+    fmt::println("USE THE SAME MASTER KEY EVERY TIME YOU RUN THE PROGRAM!");
+    fmt::println("IF YOU USE DIFFERENT MASTER KEY, YOU WILL CORRUPT THE FILE!");
+    fmt::println("EXIT THROUGH THE PROGRAM! OTHERWISE YOUR CHANGES WON'T BE SAVED!\n");
+
     auto key = masterKey();
     auto path = getPath();
-//    auto passwords = getPasswords(path);
+    auto categories = getCategories(path);
+    auto passwords = getPasswords(path, key);
     bool isRunning = true;
 
     while(isRunning){
@@ -57,15 +57,17 @@ int main() {
         switch(option){
             case 0:
                 isRunning = false;
+                writeFile(path, categories, passwords, key);
                 break;
             case 1:
                 fmt::print("not yet implemented lol");
                 break;
             case 2:
-                sortPasswords(path);
+                sortPasswords(passwords);
                 break;
             case 3:
-                addPassword(path, key);
+                addPassword(passwords, categories);
+                fmt::println("Password added successfully!");
                 break;
             case 4:
                 fmt::print("not yet implemented lol");
@@ -154,7 +156,80 @@ long masterKey(){
     return key;
 }
 
+std::vector<std::string> getCategories(const std::string& path){
+    std::vector<std::string> categories;
 
+    auto vault = std::fstream(path, std::ios::in);
+    std::string line;
+    if(std::getline(vault, line)){
+        std::stringstream ss(line);
+        std::string category;
+        while(std::getline(ss, category, ':')){
+            categories.push_back(category);
+        }
+    }
+    vault.close();
 
+    return categories;
+}
 
+std::vector<Password> getPasswords(const std::string& path, const long& key) {
+    std::vector<Password> passwords;
 
+    auto vault = std::fstream(path, std::ios::in);
+    std::string line;
+    std::getline(vault, line);
+
+    while(std::getline(vault, line)) {
+        std::stringstream ss(line);
+        std::string name, password, webpage, login, category;
+        std::map<std::string, std::string> categories;
+        std::getline(ss, name, ':');
+        std::getline(ss, password, ':');
+        std::getline(ss, webpage, ':');
+        std::getline(ss, login, ':');
+        while (std::getline(ss, category, ':')) {
+            std::string categoryName, categoryValue;
+            categoryName = category;
+            std::getline(ss, category, ':');
+            categoryValue = category;
+            categories.insert(std::pair<std::string, std::string>(categoryName, categoryValue));
+        }
+
+        passwords.emplace_back(name, encryptPassword(password, key), webpage, login, categories);
+    }
+
+    return passwords;
+}
+
+void writeFile(const std::string& path, const std::vector<std::string>& categories,
+               const std::vector<Password>& passwords, const long& key){
+    auto vault = std::fstream(path, std::ios::out);
+
+    for (int i = 0; i < categories.size(); ++i) {
+        if(i == categories.size() - 1)
+            vault << categories.at(i);
+        else
+            vault << categories.at(i) << ":";
+    }
+    vault << "\n";
+
+    for (const auto& password : passwords) {
+        vault << password.getName() << ":"
+              << encryptPassword(password.getPassword(), key) << ":"
+              << password.getWebpage() << ":"
+              << password.getLogin();
+        for (const auto& category : password.getCategories()) {
+            vault << ":" << category.first << ":" << category.second;
+        }
+        vault << "\n";
+    }
+}
+
+std::string encryptPassword(const std::string& password, const long& key){
+    std::string encryptedPassword = "";
+    for (int i = 0; i < password.length(); ++i) {
+        encryptedPassword += (char)(password.at(i) ^ key);
+    }
+    return encryptedPassword;
+}

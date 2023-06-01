@@ -1,3 +1,5 @@
 #pragma once
 
-void addPassword(const std::string& path, const long& key);
+#include "Password.h"
+
+void addPassword(std::vector<Password>& passwords, const std::vector<std::string>& categories);
