@@ -18,4 +18,10 @@ struct Password {
     std::string getWebpage() const;
     std::string getLogin() const;
     std::map<std::string, std::string> getCategories() const;
+    void setPassword(const std::string& password);
+    void setName(const std::string& name);
+    void setWebpage(const std::string& webpage);
+    void setLogin(const std::string& login);
+    void setCategories(const std::string& categoryKey, const std::string& data);
+    void printPassword() const;
 };

@@ -37,7 +37,7 @@ int main() {
     bool isRunning = true;
 
     while(isRunning){
-        fmt::println("Choose one of the options below:\n"
+        fmt::println("\nChoose one of the options below:\n"
                    "1 -> Find password\n"
                    "2 -> Sort password\n"
                    "3 -> Add password\n"
@@ -60,23 +60,22 @@ int main() {
                 writeFile(path, categories, passwords, key);
                 break;
             case 1:
-                fmt::print("not yet implemented lol");
+                findPassword(passwords, categories);
                 break;
             case 2:
                 sortPasswords(passwords);
                 break;
             case 3:
                 addPassword(passwords, categories);
-                fmt::println("Password added successfully!");
                 break;
             case 4:
-                fmt::print("not yet implemented lol");
+                editPassword(passwords);
                 break;
             case 5:
-                fmt::print("not yet implemented lol");
+                removePassword(passwords);
                 break;
             case 6:
-                fmt::print("not yet implemented lol");
+                addCategory(categories);
                 break;
             case 7:
                 fmt::print("not yet implemented lol");

@@ -2,4 +2,4 @@
 
 #include "Password.h"
 
-void sortPasswords(const std::vector<Password>& passwords);
+void sortPasswords(std::vector<Password>& passwords);
