@@ -4,6 +4,15 @@
 
 #include "removePassword.h"
 
+/**
+ * @brief Removes a password from the list of passwords or all passwords
+ *
+ * This function removes a password from the list of passwords or all passwords
+ * depending on the user's choice.
+ *
+ * @param passwords List of passwords
+ * @param option User's choice
+ */
 void removePassword(std::vector<Password>& passwords){
     fmt::println("List of passwords:");
     for (int i = 0; i < passwords.size(); ++i) {

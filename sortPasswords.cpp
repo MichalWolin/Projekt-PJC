@@ -4,8 +4,13 @@
 
 #include "sortPasswords.h"
 
-
-
+/**
+ * @brief Sorts the passwords by the given sorting options.
+ *
+ * This function asks the user for the sorting options and sorts the passwords by them.
+ *
+ * @param passwords The vector of passwords to be sorted.
+ */
 void sortPasswords(std::vector<Password>& passwords) {
     fmt::println("How do you want to sort passwords?");
     fmt::println("Available sorting options:");
@@ -61,6 +66,7 @@ void sortPasswords(std::vector<Password>& passwords) {
         return false;
     });
 
+    fmt::println("List of sorted passwords:");
     for(const auto& password : passwords)
         password.printPassword();
 }

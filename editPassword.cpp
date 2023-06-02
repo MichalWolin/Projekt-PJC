@@ -5,16 +5,26 @@
 
 #include "editPassword.h"
 
+/**
+ * @brief Edits password
+ *
+ * This function edits password. It prints list of passwords and asks which one user wants to edit.
+ * Then it prints list of categories and asks which one user wants to edit. Then it asks for new data
+ * and edits password.
+ *
+ * @param passwords Vector of passwords
+ * @param number Number of selected password to edit
+ * @param choice Number of selected category to edit
+ * @param data New data
+ * @param passwordData Reference to selected password
+ * @param categories Map of categories
+ * @param it Iterator to selected category
+ */
 void editPassword(std::vector<Password>& passwords){
     fmt::println("List of passwords:");
     for (int i = 0; i < passwords.size(); ++i) {
-        fmt::print("{}: Name -> {}, Password -> {}, Webpage -> {}, Login -> {}",
-                   i + 1, passwords.at(i).getName(), passwords.at(i).getPassword(), passwords.at(i).getWebpage(),
-                   passwords.at(i).getLogin());
-        for(auto category : passwords.at(i).getCategories()){
-            fmt::print(", {}: {}", category.first, category.second);
-        }
-        fmt::print("\n");
+        fmt::print("{}: ", i + 1);
+        passwords.at(i).printPassword();
     }
     fmt::println("Which password do you want to edit?");
     int number;
@@ -41,8 +51,6 @@ void editPassword(std::vector<Password>& passwords){
         std::cin >> choice;
     }
 
-
-
     std::string data;
     fmt::println("Enter new data:");
     std::cin >> data;
@@ -62,5 +70,12 @@ void editPassword(std::vector<Password>& passwords){
         case 4:
             passwordData.setLogin(data);
             break;
+        default:
+            const auto& categories = passwordData.getCategories();
+            auto it = categories.begin();
+            std::advance(it, choice - 5);
+            passwordData.setCategories(it->first, data);
     }
+
+    fmt::println("Password successfully edited!");
 }

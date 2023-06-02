@@ -19,12 +19,28 @@
 
 std::string getPath();
 long masterKey();
-std::vector<std::string> getCategories(const std::string& path);
+std::vector<std::string> getCategories(const std::string& path, const long& key);
 std::vector<Password> getPasswords(const std::string& path, const long& key);
 void writeFile(const std::string& path, const std::vector<std::string>& categories,
-               const std::vector<Password>& passwords, const long& key);
-std::string encryptPassword(const std::string& password, const long& key);
+               const std::vector<Password>& passwords, const long& key, const time_t& time);
+std::string encrypt(const std::string& data, const long& key);
+int countLines(const std::string& path);
 
+
+/**
+ * @brief Main function
+ *
+ * This function is the main function of the program.
+ * It calls other functions to get the path to the file, master key, categories and passwords.
+ * Then it asks the user to choose one of the options.
+ * The program runs until the user chooses to exit.
+ *
+ * @param key Stores the master key.
+ * @param path Stores the path to the file.
+ * @param categories Stores the categories.
+ * @param passwords Stores the passwords.
+ * @param time Stores the time of opening the file
+ */
 int main() {
     fmt::println("USE THE SAME MASTER KEY EVERY TIME YOU RUN THE PROGRAM!");
     fmt::println("IF YOU USE DIFFERENT MASTER KEY, YOU WILL CORRUPT THE FILE!");
@@ -32,8 +48,9 @@ int main() {
 
     auto key = masterKey();
     auto path = getPath();
-    auto categories = getCategories(path);
+    auto categories = getCategories(path, key);
     auto passwords = getPasswords(path, key);
+    auto time = std::time(nullptr);
     bool isRunning = true;
 
     while(isRunning){
@@ -57,7 +74,7 @@ int main() {
         switch(option){
             case 0:
                 isRunning = false;
-                writeFile(path, categories, passwords, key);
+                writeFile(path, categories, passwords, key, time);
                 break;
             case 1:
                 findPassword(passwords, categories);
@@ -78,7 +95,7 @@ int main() {
                 addCategory(categories);
                 break;
             case 7:
-                fmt::print("not yet implemented lol");
+                removeCategory(passwords, categories);
                 break;
         }
     }
@@ -131,6 +148,12 @@ std::string getPath(){
         fmt::print("Enter an absolute path to vault:\n");
         std::string path;
         std::cin >> path;
+        std::filesystem::path filePath(path);
+        while(!std::filesystem::exists(filePath) || filePath.extension() != ".vault") {
+            fmt::println("File doesn't exist or has an incorrect extension! Try again:");
+            std::cin >> path;
+        }
+
         return path;
     }
 }
@@ -155,7 +178,7 @@ long masterKey(){
     return key;
 }
 
-std::vector<std::string> getCategories(const std::string& path){
+std::vector<std::string> getCategories(const std::string& path, const long& key){
     std::vector<std::string> categories;
 
     auto vault = std::fstream(path, std::ios::in);
@@ -164,7 +187,7 @@ std::vector<std::string> getCategories(const std::string& path){
         std::stringstream ss(line);
         std::string category;
         while(std::getline(ss, category, ':')){
-            categories.push_back(category);
+            categories.push_back(encrypt(category, key));
         }
     }
     vault.close();
@@ -179,56 +202,120 @@ std::vector<Password> getPasswords(const std::string& path, const long& key) {
     std::string line;
     std::getline(vault, line);
 
+    auto lineCounter = countLines(path);
+    int currentLine = 1;
+
     while(std::getline(vault, line)) {
         std::stringstream ss(line);
         std::string name, password, webpage, login, category;
         std::map<std::string, std::string> categories;
         std::getline(ss, name, ':');
+        if(currentLine == 1 || currentLine == (lineCounter / 2) + 1 || currentLine == lineCounter){
+            std::getline(ss, name, ':');
+        }
         std::getline(ss, password, ':');
         std::getline(ss, webpage, ':');
         std::getline(ss, login, ':');
         while (std::getline(ss, category, ':')) {
             std::string categoryName, categoryValue;
-            categoryName = category;
+            categoryName = encrypt(category, key);
             std::getline(ss, category, ':');
-            categoryValue = category;
+            categoryValue = encrypt(category, key);
             categories.insert(std::pair<std::string, std::string>(categoryName, categoryValue));
         }
 
-        passwords.emplace_back(name, encryptPassword(password, key), webpage, login, categories);
+        passwords.emplace_back(encrypt(name, key), encrypt(password, key),
+                               encrypt(webpage, key),encrypt(login, key), categories);
+        currentLine++;
     }
 
     return passwords;
 }
 
+/**
+ * @brief Writes data to the file
+ *
+ * This function writes data to the file.
+ *
+ * @param path Stores the path to the file.
+ * @param categories Stores the categories.
+ * @param passwords Stores the passwords.
+ * @param key Stores the master key.
+ */
 void writeFile(const std::string& path, const std::vector<std::string>& categories,
-               const std::vector<Password>& passwords, const long& key){
+               const std::vector<Password>& passwords, const long& key, const std::time_t& time){
     auto vault = std::fstream(path, std::ios::out);
+
+    std::tm* tm = std::localtime(&time);
 
     for (int i = 0; i < categories.size(); ++i) {
         if(i == categories.size() - 1)
-            vault << categories.at(i);
+            vault << encrypt(categories.at(i), key);
         else
-            vault << categories.at(i) << ":";
+            vault << encrypt(categories.at(i), key) << ":";
     }
     vault << "\n";
 
+    int line = 0;
+
     for (const auto& password : passwords) {
-        vault << password.getName() << ":"
-              << encryptPassword(password.getPassword(), key) << ":"
-              << password.getWebpage() << ":"
-              << password.getLogin();
+        if(line == 0){
+            vault << std::put_time(tm, "%H");
+            vault << ":";
+        }else if(line == passwords.size() / 2){
+            vault << std::put_time(tm, "%M");
+            vault << ":";
+        }else if(line == passwords.size() - 1) {
+            vault << std::put_time(tm, "%S");
+            vault << ":";
+        }
+        vault << encrypt(password.getName(), key) << ":"
+              << encrypt(password.getPassword(), key) << ":"
+              << encrypt(password.getWebpage(), key) << ":"
+              << encrypt(password.getLogin(), key);
         for (const auto& category : password.getCategories()) {
-            vault << ":" << category.first << ":" << category.second;
+            vault << ":" << encrypt(category.first, key) << ":" << encrypt(category.second, key);
         }
         vault << "\n";
+        line++;
     }
 }
 
-std::string encryptPassword(const std::string& password, const long& key){
-    std::string encryptedPassword = "";
-    for (int i = 0; i < password.length(); ++i) {
-        encryptedPassword += (char)(password.at(i) ^ key);
+/**
+ * @brief Encrypts data
+ *
+ * This function encrypts data using XOR operation.
+ *
+ * @param data Stores the data to be encrypted.
+ * @param key Stores the master key.
+ * @return encryptedData Stores the encrypted data.
+ */
+std::string encrypt(const std::string& data, const long& key){
+    std::string encryptedData = "";
+    for (int i = 0; i < data.length(); ++i) {
+        encryptedData += (char)(data.at(i) ^ key);
     }
-    return encryptedPassword;
+    return encryptedData;
+}
+
+/**
+ * @brief Counts lines of passwords in the file
+ *
+ * This function counts lines of passwords in the file.
+ *
+ * @param path Stores the path to the file.
+ * @return counter Stores the number of lines.
+ */
+int countLines(const std::string& path){
+    int counter = 0;
+    auto vault = std::fstream(path, std::ios::in);
+    std::string line;
+    while(std::getline(vault, line)){
+        if (!line.empty()) {
+            counter++;
+        }
+    }
+    vault.close();
+
+    return counter - 1;
 }
